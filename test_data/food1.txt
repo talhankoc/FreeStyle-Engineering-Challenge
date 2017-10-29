@@ -1,0 +1,5 @@
+apple:2
+orange:3
+banana:4
+chicken sandwich:8
+burger:10
