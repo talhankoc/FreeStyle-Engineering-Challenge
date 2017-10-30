@@ -1,9 +1,9 @@
 Bob
-coffee
+coffee,water,beer,juice
 apple,orange
 Janet
 water,juice
-chicken sandwich, burger
+burger,chicken sandwich
 Jake
 beer
-burger
+burger,apple,banana
