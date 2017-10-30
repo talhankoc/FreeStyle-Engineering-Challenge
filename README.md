@@ -10,3 +10,8 @@ Design and implement an algorithm that reads in the files and selects what drink
 
 Your answer should include an explanation of your algorithm, test cases, and a statement of all the assumptions you've made.
 
+# Running
+
+Run main.py with no arguments for default input values,
+one argument: (float) budget_size
+or with three arguments: (float) budget_size, food_file_name, and drinks_file_name

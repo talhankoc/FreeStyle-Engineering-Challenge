@@ -14,12 +14,12 @@ if len(sys.argv) == 1:
     pass
 elif len(sys.argv) == 2:
     try:
-        budget = int(sys.argv[1])
+        budget = float(sys.argv[1])
     except ValueError as e:
         raise(e)
 elif len(sys.argv) == 4:
     try:
-        budget = int(sys.argv[1])
+        budget = float(sys.argv[1])
     except ValueError as e:
         raise(e)
     food_file_name = sys.argv[2]
