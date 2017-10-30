@@ -42,5 +42,7 @@ However, in both cases, it's allowed to have a space in the item name. For examp
 
 chicken sandwich:10
 
-...is acceptable formatting.
+...is acceptable formatting. Check the test_data folder for a closer look at formatting.
+
+Dependencies in the code are commented.
 
