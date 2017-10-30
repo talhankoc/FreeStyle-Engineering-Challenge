@@ -1,16 +1,29 @@
-### run main.py with one argument that is an int representing the size of the budget
-
 import sys
 from copy import deepcopy
 
-#default value for budget if no arguments provided
+'''
+run main.py with one argument that is an int representing the size of the budget
+or with three arguments: budget_size, food_file_name, and drinks_file_name
+'''
+
+#default values
+budget = 100
+food_file_name = 'test_data/food1.txt'
+drinks_file_name = 'test_data/drinks1.txt'
 if len(sys.argv) == 1:
-    budget = 100
+    pass
 elif len(sys.argv) == 2:
     try:
         budget = int(sys.argv[1])
-    except ValueError as verr:
-        raise(verr)
+    except ValueError as e:
+        raise(e)
+elif len(sys.argv) == 4:
+    try:
+        budget = int(sys.argv[1])
+    except ValueError as e:
+        raise(e)
+    food_file_name = sys.argv[2]
+    drinks_file_name = sys.argv[3]
 else:
     raise Exception('Invalid Input. Should contain only a single argument (integer) denoting the budget size.')
 
@@ -59,7 +72,7 @@ Goal:
         for food over drinks, because you people need to eat but
         they don't need to have drinks assuming there's water
         provided.
-    2. If budget is maxed out before this criteria 1 is met,
+    2. If budget is maxed out before criteria 1 is met,
         then just return. There's no way to make it better.
     3. Else if every person gets one food or drink item from their,
         prefs, then find the second least expensive pref for each person,
@@ -71,12 +84,14 @@ Goal:
         and drinks if everybody alredy has all the food and drinks they want.
 '''
 
+### Stores the name and preferred food/drinks for a person
+### DEPENDENCY: the 'food' and 'drinks' dictionaries must be set already
 class Person:
-    ### name    -> string
-    ### drinks  -> list of strings sorted by unit price
-    ### food    -> list of strings sorted by unit price
-    def __init__(self, name, _drinks, _food):
-        self.name = name
+    ### _name    -> string
+    ### _drinks  -> list of strings sorted by unit price
+    ### _food    -> list of strings sorted by unit price
+    def __init__(self, _name, _drinks, _food):
+        self.name = _name
         self.drinks = sorted(_drinks, key=lambda item: drinks[item])
         self.food = sorted(_food, key=lambda item: food[item])
 
@@ -86,12 +101,12 @@ class Person:
 ### Dependency
 ### Order matters here. "people" should be set last beccause it
 ### depends on "food" and "drinks" to sort the lists
-food = parse_items_file("test_data/food1.txt")
-drinks = parse_items_file("test_data/drinks1.txt")
+food = parse_items_file(food_file_name)
+drinks = parse_items_file(drinks_file_name)
 people = parse_people_file("test_data/people1.txt", drinks, food)
-people_unmodified = deepcopy(people)
-bag = dict()
-### pops the item from 
+people_unmodified = deepcopy(people) #used later on for printing purposes
+bag = dict() # maps item name to quantity
+
 def add_item_to_bag(item):
     try:
         bag[item] += 1
@@ -104,12 +119,18 @@ def all_items_popped():
             return False
     return True
 
+#################
+### main loop ###
+#################
 while budget > 0:
     old_budget = 0 + budget
+    ###case where no items left to buy
     if all_items_popped():
         break;
-    people_by_drink = sorted(people, key=lambda person: drinks[person.drinks[0]] if len(person.drinks)>0 else 0)
-    people_by_food = sorted(people, key=lambda person: food[person.food[0]] if len(person.food)>0 else 0)
+    people_by_drink = sorted(people, key=lambda person:
+                             drinks[person.drinks[0]] if len(person.drinks)>0 else 0)
+    people_by_food = sorted(people, key=lambda person:
+                            food[person.food[0]] if len(person.food)>0 else 0)
     for person in people_by_food:
         if len(person.food) > 0 and food[person.food[0]] <= budget:
             item = person.food.pop(0)
@@ -121,8 +142,7 @@ while budget > 0:
             add_item_to_bag(item)
             budget -= drinks[item]
 
-    ### case where budget is not zero but we can
-    ### no longer purchase anything.
+    ### case where we can no longer purchase anything
     if old_budget == budget:
         break;
 
@@ -134,7 +154,6 @@ print '\nFood and drinks accounted for:'
 for p1,p2 in zip(people, people_unmodified):
     checked_food = [val for val in p2.food if val not in p1.food]
     checked_drinks = [val for val in p2.drinks if val not in p1.drinks]
-    #print (p1.name +'drinks :' + str(checked_drinks) + '\tfood :' + str(checked_food)).expandtabs(30)
     print '\tName: {0:16} Drinks: {1:30} Food: {2:30}'.format(p1.name, checked_drinks,checked_food)
 print '\nFood and drinks that were to too expensive to purchase per person:'
 for p in people:
@@ -147,8 +166,7 @@ for index, key in zip(range(len(bag)), bag):
         cost = bag[key]*food[key]
     else:
         cost = bag[key]*drinks[key]
-    print '{0:6} {1:<20} quantatiy: {2:<9} total_cost: {3:<12}'.format(index+1, key, bag[key], cost).ljust(5)
-    #print ('\t'+str(index) +" "+ key+'\tquantity : ' + str(bag[key]) + '\ttotal_cost s: '+ str(cost)).expandtabs(30)
+    print '{0:6} {1:<20} quantatiy: {2:<9} total_cost: ${3:<12}'.format(index+1, key, bag[key], cost).ljust(5)
          
 print 'Total cost:',sum([bag[key]*food[key] for key in bag if key in food] +
                         [bag[key]*drinks[key] for key in bag if key in drinks])
