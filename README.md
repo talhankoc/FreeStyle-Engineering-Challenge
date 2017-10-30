@@ -15,3 +15,18 @@ Your answer should include an explanation of your algorithm, test cases, and a s
 Run main.py with no arguments for default input values,
 one argument: (float) budget_size
 or with three arguments: (float) budget_size, food_file_name, and drinks_file_name
+
+# Dependency
+
+Food and Drinks text files should be formatted in the following way:
+food1:1
+food2:2.5
+...with no space next to the colon.
+People text files should be formmated as:
+Person Name
+drink1,drink2,drink3
+food1,food2,food3
+...with no space after commas. 
+However, in both cases, it's allowed to have a space in the item name. For example:
+chicken sandwich:10
+...is acceptable formatting.
